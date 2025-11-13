@@ -1,10 +1,17 @@
+"""
+shape_retrieval.py - Shape-based image retrieval
+"""
+
 import os
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from pathlib import Path
+from utils import load_features_from_json, euclidean_distance
+
 
 def compute_shape_distance(features1, features2, weights=None):
+    """Compute distance between two shape feature vectors."""
     if weights is None:
         weights = {'fourier': 0.5, 'direction': 0.3, 'hu_moments': 0.2}
     
@@ -27,7 +34,9 @@ def compute_shape_distance(features1, features2, weights=None):
             weights['direction'] * direction_dist +
             weights['hu_moments'] * hu_dist)
 
+
 def retrieve_similar_shapes(query_image_name, features_folder, images_folder, top_k=6):
+    """Retrieve top-k similar images based on shape."""
     query_json = os.path.join(features_folder, Path(query_image_name).stem + '.json')
     
     if not os.path.exists(query_json):
@@ -58,7 +67,9 @@ def retrieve_similar_shapes(query_image_name, features_folder, images_folder, to
     
     return results
 
+
 def visualize_shape_results(query_image_path, results, output_path=None):
+    """Visualize query image and retrieval results."""
     fig, axes = plt.subplots(2, 4, figsize=(16, 8))
     fig.suptitle('Shape-Based Image Retrieval', fontsize=14)
     
@@ -93,3 +104,13 @@ def visualize_shape_results(query_image_path, results, output_path=None):
         print(f"Saved: {output_path}")
     
     plt.show()
+
+
+if __name__ == "__main__":
+    query = 'apple-1.gif'
+    results = retrieve_similar_shapes(query, 'features/Formes', 'data/Formes', 6)
+    
+    query_path = os.path.join('data/Formes', query)
+    output_path = os.path.join('results/shape_results', f'results_{Path(query).stem}.png')
+    
+    visualize_shape_results(query_path, results, output_path)

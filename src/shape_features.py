@@ -3,8 +3,11 @@ import cv2
 import numpy as np
 import os
 from pathlib import Path
+from utils import save_features_to_json, load_image
+
 
 def extract_contour(gray_image):
+    """Extract the most significant contour from image."""
     _, binary = cv2.threshold(gray_image, 127, 255, 
                               cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
     contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, 
@@ -15,51 +18,82 @@ def extract_contour(gray_image):
     
     return max(contours, key=len)
 
+
 def fourier_descriptors(contour, num_descriptors=20):
+    """Compute Fourier descriptors from contour."""
     if contour is None or len(contour) < 3:
         return np.zeros(num_descriptors)
     
-    contour_complex = np.empty(contour.shape[:-1], dtype=complex)
-    contour_complex.real = contour[:, 0, 0]
-    contour_complex.imag = contour[:, 0, 1]
+    # Handle contour shape properly
+    if len(contour.shape) == 3:
+        # Contour is (N, 1, 2) - standard OpenCV format
+        contour_points = contour[:, 0, :]
+    elif len(contour.shape) == 2:
+        # Contour is (N, 2) - already flattened
+        contour_points = contour
+    else:
+        return np.zeros(num_descriptors)
     
+    # Create complex representation
+    contour_complex = contour_points[:, 0] + 1j * contour_points[:, 1]
+    
+    # Apply FFT
     fourier_result = np.fft.fft(contour_complex)
     fourier_magnitudes = np.abs(fourier_result)
     
-    if fourier_magnitudes[0] != 0:
-        fourier_magnitudes = fourier_magnitudes / fourier_magnitudes[0]
+    # Normalize by first coefficient (excluding DC component)
+    if len(fourier_magnitudes) > 1 and fourier_magnitudes[1] != 0:
+        fourier_magnitudes = fourier_magnitudes / fourier_magnitudes[1]
     
+    # Extract descriptors (skip DC component)
     descriptors = fourier_magnitudes[1:num_descriptors+1]
     
+    # Pad if necessary
     if len(descriptors) < num_descriptors:
         descriptors = np.pad(descriptors, (0, num_descriptors - len(descriptors)))
     
     return descriptors
 
+
 def edge_direction_histogram(contour, num_bins=36):
+    """Compute histogram of edge directions."""
     if contour is None or len(contour) < 2:
         return np.zeros(num_bins)
     
-    contour_points = contour[:, 0, :]
+    # Handle contour shape properly
+    if len(contour.shape) == 3:
+        contour_points = contour[:, 0, :]
+    elif len(contour.shape) == 2:
+        contour_points = contour
+    else:
+        return np.zeros(num_bins)
+    
+    # Compute differences
     dx = np.diff(contour_points[:, 0])
     dy = np.diff(contour_points[:, 1])
     
+    # Compute angles
     angles = np.arctan2(dy, dx) * 180 / np.pi
     angles = (angles + 360) % 360
     
+    # Create histogram
     histogram, _ = np.histogram(angles, bins=num_bins, range=(0, 360))
     
+    # Normalize
     if histogram.sum() > 0:
         histogram = histogram.astype(float) / histogram.sum()
     
     return histogram
 
+
 def extract_shape_features(image_path, num_fourier=20, num_direction_bins=36):
+    """Extract all shape features from image."""
     gray, _ = load_image(image_path)
     contour = extract_contour(gray)
     fourier_desc = fourier_descriptors(contour, num_fourier)
     direction_hist = edge_direction_histogram(contour, num_direction_bins)
     
+    # Compute Hu moments
     moments = cv2.moments(contour) if contour is not None else {}
     hu_moments = cv2.HuMoments(moments).flatten() if moments else np.zeros(7)
     
@@ -70,7 +104,9 @@ def extract_shape_features(image_path, num_fourier=20, num_direction_bins=36):
         'hu_moments': np.log(np.abs(hu_moments) + 1e-10)
     }
 
+
 def process_all_shape_images(input_folder, output_folder):
+    """Process all images in shape folder and extract features."""
     os.makedirs(output_folder, exist_ok=True)
     
     image_files = []
@@ -79,11 +115,19 @@ def process_all_shape_images(input_folder, output_folder):
     
     print(f"Processing {len(image_files)} shape images...")
     
+    processed = 0
     for image_path in sorted(image_files):
         try:
             features = extract_shape_features(str(image_path))
             json_path = os.path.join(output_folder, image_path.stem + '.json')
             save_features_to_json(features, json_path)
+            processed += 1
             print(f"Processed: {image_path.name}")
         except Exception as e:
             print(f"Error with {image_path.name}: {str(e)}")
+    
+    print(f"Successfully processed {processed}/{len(image_files)} images.")
+
+
+if __name__ == "__main__":
+    process_all_shape_images("data/Formes", "features/Formes")

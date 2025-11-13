@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from pathlib import Path
+from utils import load_features_from_json, euclidean_distance
 
 def compute_texture_distance(features1, features2, weights=None):
     if weights is None:

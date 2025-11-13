@@ -1,11 +1,15 @@
+
 import cv2
 import numpy as np
 import os
 from pathlib import Path
 from scipy import ndimage
 from skimage.feature import graycomatrix, graycoprops
+from utils import save_features_to_json, load_image
+
 
 def gabor_filters(image, num_orientations=8, num_scales=5):
+    """Apply Gabor filter bank to image."""
     features = []
     
     for scale in range(num_scales):
@@ -30,7 +34,9 @@ def gabor_filters(image, num_orientations=8, num_scales=5):
     
     return np.array(features)
 
+
 def tamura_coarseness(image, k_max=5):
+    """Compute Tamura coarseness feature."""
     image = image.astype(float)
     h, w = image.shape
     
@@ -50,7 +56,9 @@ def tamura_coarseness(image, k_max=5):
     
     return coarseness
 
+
 def tamura_contrast(image):
+    """Compute Tamura contrast feature."""
     image = image.astype(float)
     
     mu4 = np.mean((image - np.mean(image)) ** 4)
@@ -64,7 +72,9 @@ def tamura_contrast(image):
     
     return contrast
 
+
 def tamura_directionality(image, num_bins=16):
+    """Compute Tamura directionality feature."""
     gx = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)
     gy = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)
     
@@ -85,7 +95,9 @@ def tamura_directionality(image, num_bins=16):
     
     return hist, directionality
 
+
 def glcm_features(image, distances=[1, 3, 5], angles=[0, np.pi/4, np.pi/2, 3*np.pi/4]):
+    """Compute GLCM-based texture features."""
     image_normalized = (image / 16).astype(np.uint8)
     
     glcm = graycomatrix(
@@ -107,7 +119,9 @@ def glcm_features(image, distances=[1, 3, 5], angles=[0, np.pi/4, np.pi/2, 3*np.
     
     return np.array(features)
 
+
 def extract_texture_features(image_path):
+    """Extract all texture features from image."""
     gray, _ = load_image(image_path)
     gray = cv2.resize(gray, (256, 256))
     
@@ -127,7 +141,9 @@ def extract_texture_features(image_path):
         'glcm_features': glcm_feats
     }
 
+
 def process_all_texture_images(input_folder, output_folder):
+    """Process all images in texture folder and extract features."""
     os.makedirs(output_folder, exist_ok=True)
     
     image_files = []
@@ -136,12 +152,19 @@ def process_all_texture_images(input_folder, output_folder):
     
     print(f"Processing {len(image_files)} texture images...")
     
+    processed = 0
     for image_path in sorted(image_files):
         try:
             features = extract_texture_features(str(image_path))
             json_path = os.path.join(output_folder, image_path.stem + '.json')
             save_features_to_json(features, json_path)
+            processed += 1
             print(f"Processed: {image_path.name}")
         except Exception as e:
             print(f"Error with {image_path.name}: {str(e)}")
+    
+    print(f"Successfully processed {processed}/{len(image_files)} images.")
 
+
+if __name__ == "__main__":
+    process_all_texture_images("data/Textures", "features/Textures")

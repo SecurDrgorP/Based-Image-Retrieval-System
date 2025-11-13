@@ -1,12 +1,10 @@
-"""
-shape_retrieval.py - Shape-based image retrieval
-"""
 
 import os
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from pathlib import Path
+from PIL import Image
 from utils import load_features_from_json, euclidean_distance
 
 
@@ -68,29 +66,52 @@ def retrieve_similar_shapes(query_image_name, features_folder, images_folder, to
     return results
 
 
+def load_image_for_display(image_path):
+    """Load image for display (handles GIF, PNG, JPG)."""
+    try:
+        # Try OpenCV first
+        img = cv2.imread(image_path)
+        if img is not None:
+            return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    except:
+        pass
+    
+    # Use PIL for GIF and other formats
+    try:
+        pil_img = Image.open(image_path)
+        if pil_img.mode != 'RGB':
+            pil_img = pil_img.convert('RGB')
+        return np.array(pil_img)
+    except Exception as e:
+        print(f"Error loading {image_path}: {e}")
+        # Return a blank image
+        return np.ones((100, 100, 3), dtype=np.uint8) * 128
+
+
 def visualize_shape_results(query_image_path, results, output_path=None):
     """Visualize query image and retrieval results."""
     fig, axes = plt.subplots(2, 4, figsize=(16, 8))
     fig.suptitle('Shape-Based Image Retrieval', fontsize=14)
     
-    query_img = cv2.imread(query_image_path)
-    query_img = cv2.cvtColor(query_img, cv2.COLOR_BGR2RGB)
+    # Load and display query image
+    query_img = load_image_for_display(query_image_path)
     
     axes[0, 0].imshow(query_img)
-    axes[0, 0].set_title(f'Query: {os.path.basename(query_image_path)}')
+    axes[0, 0].set_title(f'Query: {os.path.basename(query_image_path)}', 
+                         fontsize=10, fontweight='bold', color='red')
     axes[0, 0].axis('off')
     
     for i in range(1, 4):
         axes[0, i].axis('off')
     
+    # Display results
     for idx, (img_name, distance, img_path) in enumerate(results):
         row, col = 1, idx % 4
         
-        img = cv2.imread(img_path)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = load_image_for_display(img_path)
         
         axes[row, col].imshow(img)
-        axes[row, col].set_title(f'{img_name}\nDist: {distance:.4f}')
+        axes[row, col].set_title(f'{img_name}\nDist: {distance:.4f}', fontsize=9)
         axes[row, col].axis('off')
     
     for idx in range(len(results), 4):
@@ -109,6 +130,10 @@ def visualize_shape_results(query_image_path, results, output_path=None):
 if __name__ == "__main__":
     query = 'apple-1.gif'
     results = retrieve_similar_shapes(query, 'features/Formes', 'data/Formes', 6)
+    
+    print("Results:")
+    for i, (name, dist, path) in enumerate(results, 1):
+        print(f"{i}. {name:20s} Distance: {dist:.6f}")
     
     query_path = os.path.join('data/Formes', query)
     output_path = os.path.join('results/shape_results', f'results_{Path(query).stem}.png')

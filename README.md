@@ -163,18 +163,3 @@ Results:
 Visualize? (y/n): y
 Saved: results/shape_results/result_apple-1.png
 ```
-
-## References
-
-1. M. Flickner et al., "Query by Image and Video Content: The QBIC System", IEEE Computer, 1995.
-2. D. Zhang and G. Lu, "Shape-based Image Retrieval Using Generic Fourier Descriptor", 2003.
-3. H. Tamura et al., "Textural Features Corresponding to Visual Perception", IEEE Trans. SMC, 1978.
-4. R. M. Haralick et al., "Textural Features for Image Classification", IEEE Trans. SMC, 1973.
-
-## License
-
-MIT License
-
-## Author
-
-[Your Name] - [Year]

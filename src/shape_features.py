@@ -6,8 +6,8 @@ from pathlib import Path
 from src.utils import save_features_to_json, load_image
 
 
+# Shape Feature Extraction using Contour Analysis
 def extract_contour(gray_image):
-    """Extract the most significant contour from image."""
     _, binary = cv2.threshold(gray_image, 127, 255, 
                               cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
     contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, 
@@ -19,8 +19,8 @@ def extract_contour(gray_image):
     return max(contours, key=len)
 
 
+# Fourier Descriptors
 def fourier_descriptors(contour, num_descriptors=20):
-    """Compute Fourier descriptors from contour."""
     if contour is None or len(contour) < 3:
         return np.zeros(num_descriptors)
     
@@ -55,8 +55,8 @@ def fourier_descriptors(contour, num_descriptors=20):
     return descriptors
 
 
+# Edge Direction Histogram
 def edge_direction_histogram(contour, num_bins=36):
-    """Compute histogram of edge directions."""
     if contour is None or len(contour) < 2:
         return np.zeros(num_bins)
     
@@ -86,8 +86,8 @@ def edge_direction_histogram(contour, num_bins=36):
     return histogram
 
 
+# Main function to extract all shape features
 def extract_shape_features(image_path, num_fourier=20, num_direction_bins=36):
-    """Extract all shape features from image."""
     gray, _ = load_image(image_path)
     contour = extract_contour(gray)
     fourier_desc = fourier_descriptors(contour, num_fourier)
@@ -105,8 +105,8 @@ def extract_shape_features(image_path, num_fourier=20, num_direction_bins=36):
     }
 
 
+# Batch processing of shape images
 def process_all_shape_images(input_folder, output_folder):
-    """Process all images in shape folder and extract features."""
     os.makedirs(output_folder, exist_ok=True)
     
     image_files = []

@@ -79,8 +79,7 @@ for img_name, distance, img_path in results:
 │   ├── shape_features.py       # Shape feature extraction
 │   ├── texture_features.py     # Texture feature extraction
 │   ├── shape_retrieval.py      # Shape-based search
-│   ├── texture_retrieval.py    # Texture-based search
-│   └── main.py                 # CLI interface
+│   └── texture_retrieval.py    # Texture-based search
 ├── data/
 │   ├── Formes/                 # Shape images
 │   └── Textures/               # Texture images
@@ -91,6 +90,7 @@ for img_name, distance, img_path in results:
 │   ├── shape_results/          # Shape search results
 │   └── texture_results/        # Texture search results
 ├── pyproject.toml              # Dependencies
+├── main.py                 # CLI interface
 └── README.md
 ```
 
@@ -129,17 +129,15 @@ distance = 0.4 × gabor_dist + 0.3 × tamura_dist + 0.15 × direction_dist + 0.1
 
 ## Requirements
 
-- Python 3.8+
-- NumPy >= 1.21.0
-- OpenCV >= 4.5.0
-- scikit-image >= 0.19.0
-- SciPy >= 1.7.0
-- Matplotlib >= 3.5.0
+- See the pyproject.toml file !!!
 
 ## Example
 
 ```bash
-$ python src/main.py
+$ uv run main.py
+
+```or use python
+$ python3 main.py
 
 CONTENT-BASED IMAGE RETRIEVAL SYSTEM
 
@@ -163,18 +161,3 @@ Results:
 Visualize? (y/n): y
 Saved: results/shape_results/result_apple-1.png
 ```
-
-## References
-
-1. M. Flickner et al., "Query by Image and Video Content: The QBIC System", IEEE Computer, 1995.
-2. D. Zhang and G. Lu, "Shape-based Image Retrieval Using Generic Fourier Descriptor", 2003.
-3. H. Tamura et al., "Textural Features Corresponding to Visual Perception", IEEE Trans. SMC, 1978.
-4. R. M. Haralick et al., "Textural Features for Image Classification", IEEE Trans. SMC, 1973.
-
-## License
-
-MIT License
-
-## Author
-
-[Your Name] - [Year]

@@ -3,11 +3,11 @@ import sys
 from pathlib import Path
 
 # Import all required functions
-from utils import load_features_from_json, save_features_to_json, load_image
-from shape_features import extract_shape_features, process_all_shape_images
-from texture_features import extract_texture_features, process_all_texture_images
-from shape_retrieval import retrieve_similar_shapes, visualize_shape_results
-from texture_retrieval import retrieve_similar_textures, visualize_texture_results
+from src.utils import load_features_from_json, save_features_to_json, load_image
+from src.shape_features import extract_shape_features, process_all_shape_images
+from src.texture_features import extract_texture_features, process_all_texture_images
+from src.shape_retrieval import retrieve_similar_shapes, visualize_shape_results
+from src.texture_retrieval import retrieve_similar_textures, visualize_texture_results
 
 
 def main():

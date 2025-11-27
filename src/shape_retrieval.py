@@ -5,11 +5,11 @@ import cv2
 import matplotlib.pyplot as plt
 from pathlib import Path
 from PIL import Image
-from utils import load_features_from_json, euclidean_distance
+from src.utils import load_features_from_json, euclidean_distance
 
 
+# Compute weighted distance between two shape feature sets
 def compute_shape_distance(features1, features2, weights=None):
-    """Compute distance between two shape feature vectors."""
     if weights is None:
         weights = {'fourier': 0.5, 'direction': 0.3, 'hu_moments': 0.2}
     
@@ -33,8 +33,8 @@ def compute_shape_distance(features1, features2, weights=None):
             weights['hu_moments'] * hu_dist)
 
 
+# Retrieve similar shapes based on shape features
 def retrieve_similar_shapes(query_image_name, features_folder, images_folder, top_k=6):
-    """Retrieve top-k similar images based on shape."""
     query_json = os.path.join(features_folder, Path(query_image_name).stem + '.json')
     
     if not os.path.exists(query_json):
@@ -66,8 +66,8 @@ def retrieve_similar_shapes(query_image_name, features_folder, images_folder, to
     return results
 
 
+# Helper function to load images for display
 def load_image_for_display(image_path):
-    """Load image for display (handles GIF, PNG, JPG)."""
     try:
         # Try OpenCV first
         img = cv2.imread(image_path)
@@ -88,8 +88,8 @@ def load_image_for_display(image_path):
         return np.ones((100, 100, 3), dtype=np.uint8) * 128
 
 
+# Visualize query and retrieved shape images
 def visualize_shape_results(query_image_path, results, output_path=None):
-    """Visualize query image and retrieval results."""
     fig, axes = plt.subplots(2, 4, figsize=(16, 8))
     fig.suptitle('Shape-Based Image Retrieval', fontsize=14)
     

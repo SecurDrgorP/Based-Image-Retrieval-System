@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import os
 from pathlib import Path
-from utils import save_features_to_json, load_image
+from src.utils import save_features_to_json, load_image
 
 
 def extract_contour(gray_image):

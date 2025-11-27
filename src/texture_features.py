@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from scipy import ndimage
 from skimage.feature import graycomatrix, graycoprops
-from utils import save_features_to_json, load_image
+from src.utils import save_features_to_json, load_image
 
 
 def gabor_filters(image, num_orientations=8, num_scales=5):

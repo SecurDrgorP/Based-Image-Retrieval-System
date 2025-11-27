@@ -5,7 +5,7 @@ import cv2
 import matplotlib.pyplot as plt
 from pathlib import Path
 from PIL import Image
-from utils import load_features_from_json, euclidean_distance
+from src.utils import load_features_from_json, euclidean_distance
 
 
 def compute_texture_distance(features1, features2, weights=None):

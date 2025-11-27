@@ -134,10 +134,12 @@ distance = 0.4 × gabor_dist + 0.3 × tamura_dist + 0.15 × direction_dist + 0.1
 ## Example
 
 ```bash
+- uv
 $ uv run main.py
 
-```or use python
+- or use python
 $ python3 main.py
+
 
 CONTENT-BASED IMAGE RETRIEVAL SYSTEM
 

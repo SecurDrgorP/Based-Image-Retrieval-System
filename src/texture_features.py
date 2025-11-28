@@ -8,8 +8,8 @@ from skimage.feature import graycomatrix, graycoprops
 from src.utils import save_features_to_json, load_image
 
 
+# Compute Gabor Filter Bank
 def gabor_filters(image, num_orientations=8, num_scales=5):
-    """Apply Gabor filter bank to image."""
     features = []
     
     for scale in range(num_scales):
@@ -35,8 +35,8 @@ def gabor_filters(image, num_orientations=8, num_scales=5):
     return np.array(features)
 
 
+# Compute Tamura Features
 def tamura_coarseness(image, k_max=5):
-    """Compute Tamura coarseness feature."""
     image = image.astype(float)
     h, w = image.shape
     
@@ -57,8 +57,8 @@ def tamura_coarseness(image, k_max=5):
     return coarseness
 
 
+# Compute Tamura Contrast
 def tamura_contrast(image):
-    """Compute Tamura contrast feature."""
     image = image.astype(float)
     
     mu4 = np.mean((image - np.mean(image)) ** 4)
@@ -73,8 +73,8 @@ def tamura_contrast(image):
     return contrast
 
 
+# Compute Tamura Directionality
 def tamura_directionality(image, num_bins=16):
-    """Compute Tamura directionality feature."""
     gx = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)
     gy = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)
     
@@ -96,8 +96,8 @@ def tamura_directionality(image, num_bins=16):
     return hist, directionality
 
 
+# Compute GLCM Features
 def glcm_features(image, distances=[1, 3, 5], angles=[0, np.pi/4, np.pi/2, 3*np.pi/4]):
-    """Compute GLCM-based texture features."""
     image_normalized = (image / 16).astype(np.uint8)
     
     glcm = graycomatrix(
@@ -120,8 +120,8 @@ def glcm_features(image, distances=[1, 3, 5], angles=[0, np.pi/4, np.pi/2, 3*np.
     return np.array(features)
 
 
+# Extract all texture features from image
 def extract_texture_features(image_path):
-    """Extract all texture features from image."""
     gray, _ = load_image(image_path)
     gray = cv2.resize(gray, (256, 256))
     
@@ -142,8 +142,8 @@ def extract_texture_features(image_path):
     }
 
 
+# Batch processing of texture images
 def process_all_texture_images(input_folder, output_folder):
-    """Process all images in texture folder and extract features."""
     os.makedirs(output_folder, exist_ok=True)
     
     image_files = []

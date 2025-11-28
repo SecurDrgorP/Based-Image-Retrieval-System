@@ -8,8 +8,8 @@ from PIL import Image
 from src.utils import load_features_from_json, euclidean_distance
 
 
+# Compute texture distance between two feature sets
 def compute_texture_distance(features1, features2, weights=None):
-    """Compute distance between two texture feature vectors."""
     if weights is None:
         weights = {'gabor': 0.4, 'tamura': 0.3, 'direction': 0.15, 'glcm': 0.15}
     
@@ -50,8 +50,8 @@ def compute_texture_distance(features1, features2, weights=None):
             weights['glcm'] * glcm_dist_norm)
 
 
+# Retrieve similar textures based on query image
 def retrieve_similar_textures(query_image_name, features_folder, images_folder, top_k=6):
-    """Retrieve top-k similar images based on texture."""
     query_json = os.path.join(features_folder, Path(query_image_name).stem + '.json')
     
     if not os.path.exists(query_json):
@@ -83,8 +83,8 @@ def retrieve_similar_textures(query_image_name, features_folder, images_folder, 
     return results
 
 
+# Visualize retrieval results
 def visualize_texture_results(query_image_path, results, output_path=None):
-    """Visualize query image and retrieval results."""
     fig, axes = plt.subplots(2, 4, figsize=(16, 8))
     fig.suptitle('Texture-Based Image Retrieval', fontsize=14)
     
@@ -119,13 +119,3 @@ def visualize_texture_results(query_image_path, results, output_path=None):
         print(f"Saved: {output_path}")
     
     plt.show()
-
-
-if __name__ == "__main__":
-    query = 'Im01.jpg'
-    results = retrieve_similar_textures(query, 'features/Textures', 'data/Textures', 6)
-    
-    query_path = os.path.join('data/Textures', query)
-    output_path = os.path.join('results/texture_results', f'results_{Path(query).stem}.png')
-    
-    visualize_texture_results(query_path, results, output_path)

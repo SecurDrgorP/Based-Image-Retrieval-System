@@ -162,4 +162,3 @@ Results:
 
 Visualize? (y/n): y
 Saved: results/shape_results/result_apple-1.png
-```

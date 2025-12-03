@@ -90,7 +90,7 @@ for img_name, distance, img_path in results:
 │   ├── shape_results/          # Shape search results
 │   └── texture_results/        # Texture search results
 ├── pyproject.toml              # Dependencies
-├── main.py                 # CLI interface
+├── cli.py                      # CLI interface
 └── README.md
 ```
 
@@ -135,10 +135,10 @@ distance = 0.4 × gabor_dist + 0.3 × tamura_dist + 0.15 × direction_dist + 0.1
 
 ```bash
 - uv
-$ uv run main.py
+$ uv run cli.py
 
 - or use python
-$ python3 main.py
+$ python3 cli.py
 
 
 CONTENT-BASED IMAGE RETRIEVAL SYSTEM

@@ -2,9 +2,7 @@
 
 <div align="center">
 
-<div align="center">
-  <video src="demo/demo.webm" width="600" controls></video>
-</div>
+<video src="demo/demo.mp4" width="600" controls></video>
 
 *Search images by visual similarity using shape and texture analysis*
 

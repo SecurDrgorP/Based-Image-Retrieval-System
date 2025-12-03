@@ -2,7 +2,9 @@
 
 <div align="center">
 
-![Demo](demo/demo.webm)
+<div align="center">
+  <video src="demo/demo.webm" width="600" controls></video>
+</div>
 
 *Search images by visual similarity using shape and texture analysis*
 
@@ -101,11 +103,11 @@ uv run app.py
 Then open your browser to: **http://localhost:5000**
 
 ### Web Features
-- ✅ Visual image selection
-- ✅ Real-time similarity search
-- ✅ Interactive results with similarity scores
-- ✅ Drag-and-drop image upload (coming soon)
-- ✅ Side-by-side comparison
+- Visual image selection
+- Real-time similarity search
+- Interactive results with similarity scores
+- Drag-and-drop image upload (coming soon)
+- Side-by-side comparison
 
 ## Command-Line Interface
 

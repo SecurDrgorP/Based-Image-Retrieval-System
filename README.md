@@ -2,8 +2,8 @@
 
 <div align="center">
 <p align="center">
-    <img src="demo/images/shape" width="600">
-    <img src="demo/images/texture" width="600">
+    <img src="demo/images/shape.png" width="600">
+    <img src="demo/images/texture.png" width="600">
 </p>
 
 *Search images by visual similarity using shape and texture analysis*

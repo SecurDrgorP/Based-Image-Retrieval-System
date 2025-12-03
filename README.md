@@ -1,8 +1,10 @@
 # Content-Based Image Retrieval System
 
 <div align="center">
-
-<video src="demo/demo.mp4" width="600" controls></video>
+<p align="center">
+    <img src="demo/images/shape" width="600">
+    <img src="demo/images/texture" width="600">
+</p>
 
 *Search images by visual similarity using shape and texture analysis*
 

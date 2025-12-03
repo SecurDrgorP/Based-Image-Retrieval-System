@@ -1,9 +1,13 @@
 # Content-Based Image Retrieval System
 
 <div align="center">
+    
 <p align="center">
-    <img src="demo/images/shape.png" width="600">
-    <img src="demo/images/texture.png" width="600">
+  <b>Shape-based Retrieval Example</b><br>
+  <img src="demo/images/shape.png" width="600" alt="Shape-based Retrieval"><br><br>
+
+  <b>Texture-based Retrieval Example</b><br>
+  <img src="demo/images/texture.png" width="600" alt="Texture-based Retrieval">
 </p>
 
 *Search images by visual similarity using shape and texture analysis*

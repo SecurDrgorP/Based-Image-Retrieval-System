@@ -3,3 +3,5 @@ uv.lock
 .python-version
 results/
 features/
+uploads/
+__pycache__/
